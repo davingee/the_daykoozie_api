@@ -19,9 +19,8 @@ class Api::V1::UserAuthenticationsController < ApplicationController
     if authentication && authentication.user.present?
       user = authentication.user
 
-      user.move_visitor_info_to_user(params[:visitor_id]) if params[:visitor_id]
-
       user.ensure_authentication_token!
+      user.send_auth_token = true
 
       options = { :type => :success, 
                   :root => :user, 
@@ -43,25 +42,22 @@ class Api::V1::UserAuthenticationsController < ApplicationController
                   :root => :false, 
                   :status => :not_acceptable,
                   :message => m("user_authentication.#{omniauth['provider']}", "authenticate_first") }
-      render_json(current_user, options)
+      render_json(nil, options)
 
     else
       user = User.new
       user.password_digest = SecureRandom.urlsafe_base64
       if user.apply_omniauth(omniauth)
         if user.save 
-          # params[:visitor_id] = 1
-          if params[:visitor_id]
-            user.move_visitor_info_to_user(params[:visitor_id])
-          end
-
           user.ensure_authentication_token!
+          user.send_auth_token = true
           options = { :type => :success, 
                       :root => :user, 
                       :status => :ok,
                       :message => m("user_authentication.#{omniauth['provider']}", "create") }
           render_json(user, options)
         else
+          
           user.provider = omniauth['provider']
           user.uid = omniauth['uid']
           options = { :type => :error, 

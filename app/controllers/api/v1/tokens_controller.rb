@@ -6,7 +6,6 @@ class Api::V1::TokensController  < ApplicationController
     email = params[:email]
     password = params[:password]
 
-    # puts request.format
     if request.format != :json
       options = { :type => :error, 
                   :root => :false, 
@@ -39,6 +38,7 @@ class Api::V1::TokensController  < ApplicationController
  
     if user && user.authenticate(password)
       user.ensure_authentication_token!
+      user.send_auth_token = true
       options = { :type => :success, 
                   :root => :user, 
                   :status => :ok,

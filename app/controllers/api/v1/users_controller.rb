@@ -13,16 +13,14 @@ class Api::V1::UsersController < ApplicationController
 
   def show
     user = User.to_show.find(params[:id])
-    options = { :type => :success, 
-                :root => :user, 
-                :status => :ok }
-    render_json(user, options)
+    render_json(user, :type => :success, :root => :user, :status => :ok )
   end
 
   def create
     user = User.new(params[:user])
     if user.save
       user.ensure_authentication_token!
+      user.send_auth_token = true
       Emailer.welcome(user).deliver
       options = { :type => :success, 
                   :root => :user, 

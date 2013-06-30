@@ -36,4 +36,14 @@ class Emailer < ActionMailer::Base
       :subject => "#{event.user.name} created an event on #{event.calendar.title}"
     )
   end
+  
+  def password_reset(user)
+    subject = I18n.translate "emailer.password_reset.subject"  
+    @user = user
+    mail(
+      :to => user.email,
+      :subject => subject
+    )
+  end
+  
 end

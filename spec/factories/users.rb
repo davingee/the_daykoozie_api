@@ -28,6 +28,11 @@ FactoryGirl.define do
       campaigns { |c| [c.association(:campaign)] }
     end
 
+    trait :with_password_token do
+      password_reset_token "u_XHu5nnINKQy5hHK37vmhcQ"
+      password_reset_sent_at "2013-06-22T22:11:40Z"
+    end
+
     trait :with_image do 
       avatar              { File.open("#{Rails.root}/app/assets/images/default.png") }
     end

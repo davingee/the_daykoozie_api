@@ -22,6 +22,7 @@ describe Api::V1::UsersController do
           FactoryGirl.create(:user)
           FactoryGirl.create(:user, :soft_deleted)
           get :index, :format => :json
+
           hash = { :body => response.body, :status => 200, 
             :type => "success", 
             :root => "users", 
@@ -66,6 +67,7 @@ describe Api::V1::UsersController do
           user = set_token_auth_with_user
           user2 = FactoryGirl.create(:user)
           get :show, :id => user2.id, :format => :json
+
           hash = { :body => response.body, :status => 200, 
             :type => "success", :root => "user", :model => user,
             :model_type => :attributes, :attributes => { :id => user2.id, :email => nil } }
