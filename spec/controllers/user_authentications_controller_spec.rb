@@ -90,6 +90,7 @@ describe Api::V1::UserAuthenticationsController do
 
     context 'success' do
       it "should create a user from omniauth" do
+        User.any_instance.stubs(:create_stripe_customer).returns(true)
         set_basic_auth
         stub_env_for_omniauth("foo@bar.com")
         post :create
@@ -135,19 +136,19 @@ describe Api::V1::UserAuthenticationsController do
       end
 
       it "log a user in if user_authentication exists" do
-        hash = {:with_omniauth => true}
-        user = set_basic_auth_with_user(hash)
+        user = set_basic_auth_with_user(:with_omniauth => true)
         stub_env_for_omniauth("foo@bar.com")
         token = user.authentication_token
         post :create
-        user.reload
-        user.authentication_token.should_not be_nil
-        user.authentication_token.should_not == token
 
         hash = { :body => response.body, :status => 200, 
           :message => eql(m("user_authentication.facebook", "login")), :type => "success", 
           :root => "user", :model => user }
         response_valid?(hash)
+
+        user.reload
+        user.authentication_token.should_not be_nil
+        user.authentication_token.should_not == token
 
       end
       
@@ -179,8 +180,23 @@ describe Api::V1::UserAuthenticationsController do
           :message => eql(JSON.parse(User.create(user_params.merge(:email => "bar.com")).errors.to_json)), 
           :type => "error",
           :root => "user",
-          :model_type => :attributes, :attributes => {:id => nil, :first_name => "foo"}
+          :model_type => :attributes, :attributes => {:id => nil, :first_name => "foo", :uid => "12345" }
         }
+        response_valid?(hash)
+
+      end
+
+      it "returns 406 messages if not logged in and email is taken" do
+        set_basic_auth
+        stub_env_for_omniauth("foo@bar.com")
+        user = FactoryGirl.create(:user, :email => "foo@bar.com")
+        post :create
+        hash = {
+          :body => response.body, 
+          :status => 406, 
+          :message => eql(m("user_authentication.facebook", "authenticate_first")), 
+          :type => "error",
+          :root => false }
         response_valid?(hash)
 
       end
@@ -206,7 +222,7 @@ describe Api::V1::UserAuthenticationsController do
 
     context 'success' do
       it "should destroy a specific user_authentication" do
-        user = set_token_auth_with_user({ :with_omniauth => true })
+        user = set_token_auth_with_user(:with_omniauth => true)
         delete :destroy, :id => user.user_authentications.first.id
 
         user.reload
