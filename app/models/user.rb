@@ -59,6 +59,71 @@ class User < ActiveRecord::Base
     (user_roles.map(&:role).include? role.to_sym) ? true : false
   end
 
+
+
+
+  after_create :create_user_email_settings
+  def create_user_email_settings
+    self.create_user_email_setting
+  end
+
+  def encrypted_password?
+    encrypted_password.present?
+  end
+
+  def following?(other_user)
+    relationships.find_by_followed_id(other_user.id)
+  end
+
+  def follow!(other_user)
+    relationships.create!(followed_id: other_user.id)
+  end
+
+  def unfollow!(other_user)
+    relationships.find_by_followed_id(other_user.id).destroy
+  end
+
+  def following_calendar?(calendar)
+    # calendar_followers.find_by_calendar_id(calendar.id)
+    calendar_roles.find_by_calendar_id_and_role(calendar.id, "follower")
+  end
+
+  def unfollow_calendar!(calendar_role)                       
+    # calendar_follower.destroy
+    # calendar_roles.find_by_calendar_id_and_role(calendar.id, "follower").destroy
+    calendar_role.destroy
+  end
+
+  def follow_calendar!(calendar)
+    calendar_roles.find_or_create_by_calendar_id_and_role!(calendar.id, "follower")
+    followers.each do |follower|
+      follower.user_notifications.create!(:kind => "friend_followed_calendar", :notificationable_id => calendar.id, :notificationable_type => "calendar")
+    end
+  end
+
+  def attending_event?(event)
+    event_attendees.find_by_event_id(event.id)
+  end
+
+  def unattend_event!(event_attendee)                       
+    event_attendee.destroy
+  end
+
+  def attend_event!(event)
+    EventAttendee.find_or_create_by_user_id_and_event_id(id, event.id)
+    # User.find(id).followers.each do |follower|
+    #   follower.user_notifications.create!(:kind => "friend_followed_calendar", :notificationable_id => calendar.id, :notificationable_type => "calendar")
+    # end
+  end
+
+
+
+
+
+
+
+
+
   def ensure_authentication_token!
     generate_token(:authentication_token)
     self.save

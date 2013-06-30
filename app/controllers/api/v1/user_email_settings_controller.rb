@@ -1,2 +1,2 @@
-class UserEmailSettingsController < ApplicationController
+class Api::V1::UserEmailSettingsController < ApplicationController
 end

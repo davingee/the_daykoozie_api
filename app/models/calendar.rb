@@ -15,6 +15,7 @@ class Calendar < ActiveRecord::Base
   # scope :mine, includes(:calendar_roles).where("calendar_roles.role in (?)", ["follower", "admin", "owner"])
   acts_as_taggable
   acts_as_taggable_on :categories
+  
   # def followers
   #   puts self
   #   Calendar.where(:calendar_id => id).includes(:calendar_roles).where(:calendar_roles => {:role => "follower"})
