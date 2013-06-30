@@ -26,7 +26,11 @@ class AvatarUploader < CarrierWave::Uploader::Base
   
   def default_url
     if model.omniauth?
-      "#{$request.protocol}graph.facebook.com/#{model.user_authentications.find_by_provider("facebook").uid}/picture?type=square"
+      begin
+        "#{$request.protocol}graph.facebook.com/#{model.user_authentications.find_by_provider("facebook").uid}/picture?type=square"
+      rescue
+        "/assets/logos/blue-icon-white-k-small.png"
+      end
     else
       "/assets/logos/blue-icon-white-k-small.png"
     end

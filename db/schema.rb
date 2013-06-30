@@ -50,9 +50,10 @@ ActiveRecord::Schema.define(:version => 20130621000353) do
   create_table "contacts", :force => true do |t|
     t.string   "name"
     t.string   "email"
-    t.text     "content"
+    t.text     "body"
     t.string   "subject"
     t.integer  "user_id"
+    t.string   "ip_address"
     t.datetime "created_at", :null => false
     t.datetime "updated_at", :null => false
   end
@@ -213,7 +214,7 @@ ActiveRecord::Schema.define(:version => 20130621000353) do
     t.string   "last_name"
     t.string   "gender"
     t.string   "time_zone"
-    t.string   "avatar"
+    t.string   "image"
     t.date     "birthday"
     t.float    "latitude"
     t.float    "longitude"

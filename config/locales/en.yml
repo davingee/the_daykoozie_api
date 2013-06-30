@@ -6,3 +6,8 @@ en:
 
   user: 
     unauthorized: "You are not authorized to view this page"
+  rescue:
+    NoMethodError: "The page can not be found."
+  contact:
+    create: "Your message has been sent."
+    

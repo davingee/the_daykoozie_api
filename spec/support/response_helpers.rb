@@ -1,6 +1,7 @@
 module ResponseHelpers
 
   def response_valid?(hash)
+    puts hash[:body]
 
     if hash[:status] > 199 and hash[:status] < 300
       response.should be_success

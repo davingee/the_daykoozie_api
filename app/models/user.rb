@@ -1,7 +1,7 @@
 class User < ActiveRecord::Base
   attr_accessible :avatar, :birthday, :first_name, :gender, :last_name, :latitude, :longitude, :omniauth, :time_zone, :username, :auth_token, :authentication_token, :confirmation_sent_at, :confirmation_token, :confirmed, :confirmed_at, :email, :has_been_geocoded, :image, :ip_address, :locked_at, :password_digest, :password_reset_sent_at, :password_reset_token, :soft_delete, :unlock_token, :password, :password_confirmation
 
-  attr_accessor :provider, :uid
+  attr_accessor :provider, :uid, :send_auth_token
 
   has_secure_password
 
@@ -39,13 +39,6 @@ class User < ActiveRecord::Base
   validates :first_name, :last_name, :presence => true
   delegate :send_friend_followed_calendar?, :send_new_comment?, :to => :user_email_setting
 
-
-
-
-
-
-
-
   validates_presence_of :password, :on => :create, :unless => :omniauth_used
 
   validates_presence_of :first_name, :last_name
@@ -70,7 +63,6 @@ class User < ActiveRecord::Base
     generate_token(:authentication_token)
     self.save
   end
-
 
   before_create { generate_token(:authentication_token) }
 

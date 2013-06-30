@@ -19,7 +19,7 @@ RSpec.configure do |config|
   # config.include ResponseHelpers, :type => :controller
 
   config.include ValidationHelper #, :type => :controller
-  config.include CustomMatcher
+  # config.include CustomMatcher
   config.include ControllerMacros
   config.include ResponseHelpers
 

@@ -31,20 +31,5 @@ module ControllerMacros
   def m(category, kind)
     I18n.translate "#{category}.#{kind}"  
   end
-
-  # # Controllers don't need to concern themselves with authorization
-  # # since we test that all seperately.
-  # def authorize
-  #   before(:each) do
-  #     @ability = Object.new.tap {|o| o.extend CanCan::Ability}
-  #     @ability.can :manage, :all
-  #     @controller.stub(:current_ability) { @ability }
-  #   end
-  # end
-  # 
-  # def authorize_and_login
-  #   authorize
-  #   login
-  # end
   
 end

@@ -35,7 +35,8 @@
                       <td class="templateButtonContent" valign=
                       "middle">
                         <div mc:edit="std_content01">
-                          <%= link_to "View calendars", calendars_url %>
+                          <%# link_to "View calendars", calendars_url %>
+							<%= link_to "View calendars", "#{APP_CONFIG[:host]}calendars"%>
                         </div>
                       </td>
                     </tr>

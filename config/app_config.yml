@@ -1,10 +1,12 @@
 development:
+  host: "http://localhost:3000/" # gives you localhost:3000 or rumorsource.com
   facebook_key: "133732003453721" #https://ninjathat.dev
   facebook_secret: "aa723c4687ad8ab2f1eaf7100c8f0608"
   twitter_key: "kM66Syxn7F0Qt9CA3IgCPQ"
   twitter_secret: "M9EtCnGjJuIIdi2j2WIrkgCjxJEkfKTZv7qqpTqk"
 
 test:
+  host: "http://localhost:3000/" # gives you localhost:3000 or rumorsource.com
   facebook_key: "133732003453721" #https://ninjathat.dev
   facebook_secret: "aa723c4687ad8ab2f1eaf7100c8f0608"
   twitter_key: "kM66Syxn7F0Qt9CA3IgCPQ"

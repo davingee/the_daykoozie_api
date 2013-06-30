@@ -98,18 +98,16 @@ DaykoozieCom::Application.routes.draw do
       resources :contacts
       match "contact", :to => "contacts#new", :as => "contact"
 
-
       resources :relationships, only: [:create, :destroy]
       resources :event_attendees, :only => [:create, :destroy]
 
-
       resources :password_resets      
+
       resources :users, :only => [:create, :index, :show] do 
         member do
           get 'following'
           get 'followers'
         end
-        
       end
       get "users/edit"
       put "users/update"

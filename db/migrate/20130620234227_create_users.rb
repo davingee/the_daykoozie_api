@@ -6,7 +6,7 @@ class CreateUsers < ActiveRecord::Migration
       t.string :last_name
       t.string :gender
       t.string :time_zone
-      t.string :avatar
+      t.string :image
       t.date :birthday
       t.float :latitude
       t.float :longitude
