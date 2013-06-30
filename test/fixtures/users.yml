@@ -1,0 +1,25 @@
+# Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/Fixtures.html
+
+one:
+  username: MyString
+  first_name: MyString
+  last_name: MyString
+  gender: MyString
+  time_zone: MyString
+  avatar: MyString
+  birthday: 2013-06-20
+  omniauth: false
+  latitude: 1.5
+  longitude: 1.5
+
+two:
+  username: MyString
+  first_name: MyString
+  last_name: MyString
+  gender: MyString
+  time_zone: MyString
+  avatar: MyString
+  birthday: 2013-06-20
+  omniauth: false
+  latitude: 1.5
+  longitude: 1.5

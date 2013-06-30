@@ -1,0 +1,23 @@
+development:
+  adapter: postgresql
+  encoding: unicode
+  database: daykoozie_api_development
+  pool: 5
+  username: <%= ENV['USER'] %>
+  password:
+
+test:
+  adapter: postgresql
+  encoding: unicode
+  database: daykoozie_api_test
+  pool: 5
+  username: <%= ENV['USER'] %>
+  password:
+
+production:
+  adapter: postgresql
+  encoding: unicode
+  database: daykoozie_api_production
+  pool: 5
+  username: <%= ENV['DBUSER'] %>
+  password: <%= ENV['DBPASSWORD'] %>

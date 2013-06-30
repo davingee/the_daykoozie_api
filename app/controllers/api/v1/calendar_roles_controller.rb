@@ -1,0 +1,2 @@
+class CalendarRolesController < ApplicationController
+end

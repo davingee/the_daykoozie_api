@@ -1,0 +1,35 @@
+# Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/Fixtures.html
+
+one:
+  title: MyString
+  feed_url: MyString
+  etag: MyString
+  author: MyString
+  summary: MyString
+  content: MyText
+  start_time: 2013-06-20 18:48:29
+  end_time: 2013-06-20 18:48:29
+  calendar_id: 1
+  user_id: 1
+  image: MyString
+  last_modified: 2013-06-20 18:48:29
+  published: 2013-06-20 18:48:29
+  url: MyString
+  all_day: false
+
+two:
+  title: MyString
+  feed_url: MyString
+  etag: MyString
+  author: MyString
+  summary: MyString
+  content: MyText
+  start_time: 2013-06-20 18:48:29
+  end_time: 2013-06-20 18:48:29
+  calendar_id: 1
+  user_id: 1
+  image: MyString
+  last_modified: 2013-06-20 18:48:29
+  published: 2013-06-20 18:48:29
+  url: MyString
+  all_day: false

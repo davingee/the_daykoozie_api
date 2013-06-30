@@ -1,0 +1,38 @@
+<table id="templateFooter" border="0" cellpadding="10" cellspacing=
+"0" width="600">
+  <tbody>
+    <tr>
+      <td class="footerContent" valign="top">
+        <!-- // Begin Module: Transactional Footer \\ -->
+
+        <table border="0" cellpadding="10" cellspacing="0" width=
+        "100%">
+          <tbody>
+            <tr>
+              <td valign="top">
+                <div mc:edit="std_footer">
+                  <strong>Our mailing address is:</strong><br />
+                  <%= mailing_address %><br>
+                  <em>Copyright 2013, Daykoozie, Inc, All rights reserved.</em><br />
+                </div>
+              </td>
+            </tr>
+            <tr>
+                <td id="utility" valign="middle">
+                    <div mc:edit="std_utility">
+                        &nbsp;
+                  <%# link_to "view this in your browser", contact_email_url(:user_id =>  @user.id) %>
+                  
+                  <%# link_to "unsubscribe from this list", my_email_settings_url %>
+
+                  <%# link_to "update subscription preferences", my_email_settings_url %>
+                        &nbsp;
+                    </div>
+                </td>
+            </tr>
+          </tbody>
+        </table><!-- // End Module: Transactional Footer \\ -->
+      </td>
+    </tr>
+  </tbody>
+</table><!-- // End Template Footer \\ -->

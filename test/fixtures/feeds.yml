@@ -1,0 +1,19 @@
+# Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/Fixtures.html
+
+one:
+  url: MyString
+  etag: MyString
+  last_modified: 2013-06-20 18:50:37
+  published: 2013-06-20 18:50:37
+  calendar_id: 1
+  user_id: 1
+  kind: MyString
+
+two:
+  url: MyString
+  etag: MyString
+  last_modified: 2013-06-20 18:50:37
+  published: 2013-06-20 18:50:37
+  calendar_id: 1
+  user_id: 1
+  kind: MyString

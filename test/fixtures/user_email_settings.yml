@@ -1,0 +1,11 @@
+# Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/Fixtures.html
+
+one:
+  user_id: 1
+  send_friend_followed_calendar: false
+  send_new_comment: false
+
+two:
+  user_id: 1
+  send_friend_followed_calendar: false
+  send_new_comment: false

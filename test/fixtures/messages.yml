@@ -1,0 +1,17 @@
+# Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/Fixtures.html
+
+one:
+  user_id: 1
+  calendar_id: 1
+  event_id: 1
+  body: MyText
+  deleted: false
+  ancestry: MyString
+
+two:
+  user_id: 1
+  calendar_id: 1
+  event_id: 1
+  body: MyText
+  deleted: false
+  ancestry: MyString
