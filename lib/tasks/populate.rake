@@ -80,7 +80,7 @@ namespace :populate do
       calendars = Icalendar.parse(cal_file)
       calendars.each do |calendar|
         c = Calendar.new
-        ctitle            = calendar.properties["x-wr_calname"]
+        c.title            = calendar.properties["x-wr_calname"]
         c.description     = Faker::Lorem.paragraph(sentence_count = rand(30..60))
         c.image           = File.open("#{Rails.root}/data/fake_images/#{IMAGES.sample}")
         c.user_id         = User.order("RANDOM()").first.id
