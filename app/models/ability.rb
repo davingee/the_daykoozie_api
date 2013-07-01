@@ -22,7 +22,7 @@ class Ability
     can :read, :all
         
     cannot :read, Calendar do |calendar|
-      calendar.private? and !calendar.calendar_role?(user,  [:owner, :admin, :manager])
+      calendar.secret? and !calendar.calendar_role?(user,  [:owner, :admin, :manager])
     end
 
     if is_registered
@@ -43,7 +43,7 @@ class Ability
     can :read, :all
     
     cannot :read, Event do |event|
-      event.calendar.private? and !event.calendar.calendar_role?(user,  [:owner, :admin, :manager])
+      event.calendar.secret? and !event.calendar.calendar_role?(user,  [:owner, :admin, :manager])
     end
   
     if is_registered

@@ -1,7 +1,7 @@
 class Calendar < ActiveRecord::Base
-  attr_accessible :category_id, :description, :image, :name, :private, :title, :user_id
+  attr_accessible :category_id, :description, :image, :secret, :title, :user_id
 
-  attr_accessor :tag_categories
+  attr_accessor :tag_categories, :show_events
 
   belongs_to :user
   has_many :events
@@ -39,6 +39,6 @@ class Calendar < ActiveRecord::Base
   
   after_create :create_owner_role
   def create_owner_role
-    self.calendar_roles.create!(:user_id => user.id, :role => "owner")
+    self.calendar_roles.create!(:user_id => user.id, :role => :owner)
   end
 end

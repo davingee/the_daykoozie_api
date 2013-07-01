@@ -36,7 +36,7 @@ ActiveRecord::Schema.define(:version => 20130621000353) do
 
   create_table "calendars", :force => true do |t|
     t.string   "title"
-    t.string   "description"
+    t.text     "description"
     t.boolean  "secret",      :default => false
     t.integer  "user_id"
     t.string   "image"

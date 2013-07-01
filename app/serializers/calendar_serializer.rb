@@ -1,4 +1,10 @@
 class CalendarSerializer < ActiveModel::Serializer
-  attributes :description, :image, :name, :private, :title, :user_id
+  attributes :description, :image, :secret, :title, :user_id
+  
+  has_many :events 
+  
+  def include_events?
+    object.show_events == true
+  end
   
 end

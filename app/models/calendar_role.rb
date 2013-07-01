@@ -10,7 +10,7 @@ class CalendarRole < ActiveRecord::Base
   belongs_to :user
   
   ROLES.each do |role|
-    scope :"#{role.pluralize}", includes(:calendar).where(:role => "#{role}")
+    scope :"#{role.to_s.pluralize}", includes(:calendar).where(:role => "#{role}")
   end
 
   scope :my_calendars, where("role in (?)", ROLES)

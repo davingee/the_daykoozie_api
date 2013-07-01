@@ -6,6 +6,8 @@ en:
 
   user: 
     unauthorized: "You are not authorized to view this page"
+  calendar: 
+    unauthorized: "You do not have permisions to view this page."
   rescue:
     NoMethodError: "The page can not be found."
   contact:
