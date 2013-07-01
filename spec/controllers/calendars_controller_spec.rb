@@ -1,5 +1,5 @@
 require 'spec_helper'
-describe Api::V1::UsersController do
+describe Api::V1::CalendarsController do
 
   let :calendar_params do
     {
@@ -16,26 +16,12 @@ describe Api::V1::UsersController do
       
       context 'success' do
       
-        it "should show all users except soft_deleted" do
+        it "should show all calendars" do
           user = set_token_auth_with_user
           FactoryGirl.create(:calendar)
           FactoryGirl.create(:calendar)
           get :index, :format => :json
 
-          hash = { :body => response.body, :status => 200, 
-            :type => "success", 
-            :root => "calendars", 
-            :models => Calendar.all }
-          response_valid?(hash)
-          @controller.current_user.id.should == user.id
-        end
-
-        it "should show also show events" do
-          user = set_token_auth_with_user
-          FactoryGirl.create(:calendar)
-          FactoryGirl.create(:calendar)
-          get :index, :format => :json
-          
           hash = { :body => response.body, :status => 200, 
             :type => "success", 
             :root => "calendars", 
@@ -52,15 +38,15 @@ describe Api::V1::UsersController do
 
       context 'success' do
       
-        it "should show all users except soft_deleted" do
-          FactoryGirl.create(:user)
-          FactoryGirl.create(:user)
-          FactoryGirl.create(:user, :soft_deleted)
+        it "should show all calendars" do
+          FactoryGirl.create(:calendar)
+          FactoryGirl.create(:calendar)
+          FactoryGirl.create(:calendar)
           get :index, :format => :json
           hash = { :body => response.body, :status => 200, 
             :type => "success", 
-            :root => "users", 
-            :models => User.to_show }
+            :root => "calendars", 
+            :models => Calendar.all }
           response_valid?(hash)
         end
       
@@ -78,12 +64,22 @@ describe Api::V1::UsersController do
       
         it "should show specific user except soft_deleted" do
           user = set_token_auth_with_user
-          user2 = FactoryGirl.create(:user)
-          get :show, :id => user2.id, :format => :json
+          calendar = FactoryGirl.create(:calendar)
+          get :show, :id => calendar.id, :format => :json
 
           hash = { :body => response.body, :status => 200, 
-            :type => "success", :root => "user", :model => user,
-            :model_type => :attributes, :attributes => { :id => user2.id, :email => nil } }
+            :type => "success", :root => "calendar", :model => calendar,
+            :model_type => :attributes, :attributes => { :id => calendar.id, :user_id => calendar.user.id } }
+          response_valid?(hash)
+        end
+        
+        it "should  show a calendar that is a secret if i have permisions" do
+          calendar = FactoryGirl.create(:calendar, :secret => true)
+          user = set_token_auth_with_user(:with_user => calendar.user)
+          get :show, :id => calendar.id, :format => :json
+          hash = { :body => response.body, :status => 200, 
+            :type => "success", :root => "calendar", :model => calendar,
+            :model_type => :attributes, :attributes => { :id => calendar.id, :user_id => user.id } }
           response_valid?(hash)
 
         end
@@ -96,23 +92,33 @@ describe Api::V1::UsersController do
 
       context 'success' do
       
-        it "should show specific user except soft_deleted" do
-          user = FactoryGirl.create(:user)
-          get :show, :id => user.id, :format => :json
+        it "should show specific calendars except soft_deleted" do
+          calendar = FactoryGirl.create(:calendar)
+          user = calendar.user
+          get :show, :id => calendar.id, :format => :json
           hash = { :body => response.body, :status => 200, 
-            :type => "success", :root => "user", :model => user,
-            :model_type => :attributes, :attributes => { :id => user.id, :email => nil } }
+            :type => "success", :root => "calendar", :model => calendar,
+            :model_type => :attributes, :attributes => { :id => calendar.id, :user_id => user.id } }
           response_valid?(hash)
         end
       
       end
 
       context 'failure' do
-        it "should not show a user that has been soft_deleted" do
-          user = FactoryGirl.create(:user, :soft_deleted)
-          get :show, :id => user.id, :format => :json
+        it "should not show a calendar that cannot be found" do
+          calendar = FactoryGirl.create(:calendar)
+          get :show, :id => 44, :format => :json
           hash = { :body => response.body, :status => 404, 
             :type => "error", :root => false, :message => match(m("rescue", "RecordNotFound")) }
+          response_valid?(hash)
+
+        end
+
+        it "should not show a calendar that is a secret" do
+          calendar = FactoryGirl.create(:calendar, :secret => true)
+          get :show, :id => calendar.id, :format => :json
+          hash = { :body => response.body, :status => 401, 
+            :type => "error", :root => false, :message => match(m("calendar", "unauthorized")) }
           response_valid?(hash)
 
         end
@@ -123,40 +129,37 @@ describe Api::V1::UsersController do
 
   end
   
-  describe "POST to register a user" do
+  describe "POST to create a calendar" do
 
     context 'success' do
 
-      it "should return user with api_key to the logged in user" do
-        set_basic_auth
-        User.any_instance.stubs(:create_stripe_customer).returns(true)
-        post :create, :user => user_params, :format => :json 
-        user = User.first
+      it "should create a calendar" do
+        user = set_token_auth_with_user
+        post :create, :calendar => calendar_params, :format => :json 
         hash = { :body => response.body, :status => 200, 
-          :type => "success", :root => "user", :model => user,
-          :message => eql( m("user", "create")),
-          :model_type => :attributes, :attributes => { :id => user.id, :email => nil, :authentication_token => user.authentication_token } }
+          :type => "success", :root => "calendar", :model => user,
+          :message => eql( m("calendar", "create")),
+          :model_type => :attributes, :attributes => { :id => Calendar.first.id, :user_id => user.id, :description => calendar_params[:description] } }
         response_valid?(hash)
-
       end
 
     end
 
     context 'failure' do
       
-      it "should show validations if  user doesn't have all fields right" do
-        set_basic_auth
-        post :create, :user => user_params.merge(:first_name => ''), :format => :json
+      it "should show validations if calendar doesn't have all fields right" do
+        user = set_token_auth_with_user
+        post :create, :calendar => calendar_params.merge(:title => ''), :format => :json
         hash = { :body => response.body, :status => 409, 
-          :type => "error", :root => "user", 
-          :message => eql(JSON.parse(User.create(user_params.merge(:first_name => '')).errors.to_json)),
-          :model_type => :attributes, :attributes => { :id => nil, :first_name => '', :email => nil } }
+          :type => "error", :root => "calendar", 
+          :message => eql(JSON.parse(Calendar.create(calendar_params.merge(:title => '')).errors.to_json)),
+          :model_type => :attributes, :attributes => { :id => nil, :title => '', :description => calendar_params[:description] } }
         response_valid?(hash)
 
       end
 
       it "should return 401 if no basic auth exists or is correct" do
-        post :create, :user => user_params, :format => :json
+        post :create, :calendar => calendar_params, :format => :json
         hash = { :body => response.body, :status => 401, 
           :type => "error", :root => false,
           :message => match(m("user", "unauthorized")) }
@@ -167,24 +170,26 @@ describe Api::V1::UsersController do
 
   end
 
-  describe "GET to edit a user" do
+  describe "GET to edit a calendar" do
 
     context 'success' do
-      it "should return user data if logged in" do
-        user = set_token_auth_with_user
-        get :edit, :format => :json
+      it "should return calendar data if logged in" do
+
+        calendar = FactoryGirl.create(:calendar, :secret => true)
+        user = set_token_auth_with_user(:with_user => calendar.user)
+        get :edit, :id => calendar.id, :format => :json
 
         hash = { :body => response.body, :status => 200, 
-          :type => "success", :root => "user", :model => user,
-          :model_type => :attributes, :attributes => { :id => user.id, :first_name => user.first_name, :email => user.email, :authentication_token => user.authentication_token } }
+          :type => "success", :root => "calendar", :model => calendar,
+          :model_type => :attributes, :attributes => { :id => calendar.id, :user_id => user.id } }
           response_valid?(hash)
       end
     end
     
     context 'error' do
       it "should return 401 if user not logged in" do
-        user = FactoryGirl.create(:user)
-        get :edit, :format => :json
+        calendar = FactoryGirl.create(:calendar)
+        get :edit, :id => calendar.id, :format => :json
         hash = { :body => response.body, :status => 401, 
           :message => match(m("user", "unauthorized")), :type => "error", 
           :root => false }
@@ -197,14 +202,15 @@ describe Api::V1::UsersController do
   describe "Put to update a user" do
 
     context 'success' do
-      it "should return user with updated attributes to the logged in user" do
-        user = set_token_auth_with_user
-        get :update, :user => {:first_name => "dooper"}, :format => :json
+      it "should return calendar with updated attributes to the logged in user" do
+        calendar = FactoryGirl.create(:calendar, :secret => true)
+        user = set_token_auth_with_user(:with_user => calendar.user)
+        get :update, :id => calendar.id, :calendar => {:title => "testing"}, :format => :json
 
         hash = { :body => response.body, :status => 200, 
-          :type => "success", :root => "user",  :model => user, 
-          :message => eql(m("user", "update")),
-          :model_type => :attributes, :attributes => { :id => user.id, :first_name => 'dooper', :email => user.email } }
+          :type => "success", :root => "calendar",  :model => calendar, 
+          :message => eql(m("calendar", "update")),
+          :model_type => :attributes, :attributes => { :id => user.id, :title => 'testing' } }
         response_valid?(hash)
         
       end
@@ -213,17 +219,30 @@ describe Api::V1::UsersController do
     context 'error' do
 
       it "should return validation errors if any" do
-        user = set_token_auth_with_user(:with_omniauth => true)
-        get :update, :user => {:first_name => ""}, :format => :json
+        calendar = FactoryGirl.create(:calendar)
+        user = set_token_auth_with_user(:with_user => calendar.user)
+        get :update, :id => calendar.id, :calendar => {:title => ""}, :format => :json
         hash = { :body => response.body, :status => 409, 
-          :type => "error", :root => "user",
-          :message => eql(JSON.parse(User.create(user_params.merge(:email => "scott@scoran.com", :first_name => "")).errors.to_json)) }
+          :type => "error", :root => "calendar",
+          :message => eql(JSON.parse(Calendar.create(calendar_params.merge(:title => "")).errors.to_json)) }
         response_valid?(hash)
       end
 
+      it "should return 401 if no permisions" do
+        calendar = FactoryGirl.create(:calendar)
+        user = set_token_auth_with_user
+        
+        get :update, :id => calendar.id, :calendar => {:title => ""}, :format => :json
+        hash = { :body => response.body, :status => 401, 
+          :type => "error", :root => false,
+          :message => match(m("calendar", "unauthorized")) }
+        response_valid?(hash)
+
+      end
+
       it "should return 401 unauthorized if user not logged in" do
-        user = FactoryGirl.create(:user)
-        get :update, :user => {:first_name => "dooper"}, :format => :json
+        calendar = FactoryGirl.create(:calendar, :secret => true)
+        get :update, :id => calendar.id, :calendar => {:title => ""}, :format => :json
         hash = { :body => response.body, :status => 401, 
           :type => "error", :root => false,
           :message => match(m("user", "unauthorized")) }
@@ -234,28 +253,41 @@ describe Api::V1::UsersController do
 
   end
 
-  describe "Delete to soft delete a user" do
+  describe "Delete to  delete a calendar" do
 
     context 'success' do
-      it "should make soft_delete = to true" do
-        user = set_token_auth_with_user
-        delete :destroy, :format => :json
+      it "should destroy the calendar" do
+        calendar = FactoryGirl.create(:calendar)
+        user = set_token_auth_with_user(:with_user => calendar.user)
+        delete :destroy, :id => calendar.id, :format => :json
         hash = { :body => response.body, :status => 200, 
           :type => "success", :root => false,
-          :message => eql(m("user", "destroy")) }
+          :message => eql(m("calendar", "destroy")) }
         response_valid?(hash)
       end
     end
 
     context 'failure' do
       
-      it 'should not make soft_delete = to true if no current_user' do
-        delete :destroy, :format => :json
+      it 'should not destroy if no current_user' do
+        calendar = FactoryGirl.create(:calendar)
+        delete :destroy, :id => calendar.id, :format => :json
         hash = { :body => response.body, :status => 401, 
           :type => "error", :root => false,
           :message => eql(m("user", "unauthorized")) }
         response_valid?(hash)
       end
+
+      it 'should not destroy if current_user does not have permaisions' do
+        calendar = FactoryGirl.create(:calendar)
+        user = set_token_auth_with_user
+        delete :destroy, :id => calendar.id, :format => :json
+        hash = { :body => response.body, :status => 401, 
+          :type => "error", :root => false,
+          :message => match(m("calendar", "unauthorized")) }
+        response_valid?(hash)
+      end
+
 
     end
 

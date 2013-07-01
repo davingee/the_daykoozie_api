@@ -1,5 +1,5 @@
 class CalendarSerializer < ActiveModel::Serializer
-  attributes :description, :image, :secret, :title, :user_id
+  attributes :id, :description, :image, :secret, :title, :user_id
   
   has_many :events 
   

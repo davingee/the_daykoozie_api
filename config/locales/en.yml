@@ -8,7 +8,11 @@ en:
     unauthorized: "You are not authorized to view this page"
   calendar: 
     unauthorized: "You do not have permisions to view this page."
+    create: "Your calendar has been created."
+    update: "Your calendar has been updated"
+    destroy: "Your calendar has been removed"
   rescue:
+    RecordNotFound: "The page can not be found."
     NoMethodError: "The page can not be found."
   contact:
     create: "Your message has been sent."

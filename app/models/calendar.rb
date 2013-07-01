@@ -4,7 +4,7 @@ class Calendar < ActiveRecord::Base
   attr_accessor :tag_categories, :show_events
 
   belongs_to :user
-  has_many :events
+  has_many :events, :dependent => :destroy
   
   has_many :calendar_roles
   
@@ -15,6 +15,11 @@ class Calendar < ActiveRecord::Base
   # scope :mine, includes(:calendar_roles).where("calendar_roles.role in (?)", ["follower", "admin", "owner"])
   acts_as_taggable
   acts_as_taggable_on :categories
+  
+  validates :title, :description, :presence => true
+  
+  
+  scope :not_secret,   where(:secret => false)
   
   # def followers
   #   puts self

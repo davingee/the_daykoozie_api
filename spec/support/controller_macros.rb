@@ -17,6 +17,8 @@ module ControllerMacros
       user = FactoryGirl.create(:user, :with_omniauth)
     elsif hash[:with_credit_card]
       user = FactoryGirl.create(:user, :with_credit_card)
+    elsif hash[:with_user]
+      user = hash[:with_user]
     else
       user = FactoryGirl.create(:user)
     end

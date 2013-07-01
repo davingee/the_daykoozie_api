@@ -20,6 +20,9 @@ module ResponseHelpers
         body[hash[:root]].first["id"] == hash[:model].id 
       elsif hash[:model_type] == :attributes
         hash[:attributes].each do |key, value|
+          # puts "key = #{key}"
+          # puts "value = #{value}"
+          # puts "should = #{body[hash[:root]][key.to_s]}"
           body[hash[:root]][key.to_s].should == value
         end
       elsif hash[:model_type] == :has_child
