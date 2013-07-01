@@ -18,6 +18,7 @@ class CreateEvents < ActiveRecord::Migration
       t.boolean :all_day, :default => false
       t.float :latitude
       t.float :longitude
+      t.boolean :has_been_geocoded
       t.timestamps
     end
     add_index :events, :calendar_id

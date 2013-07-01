@@ -36,9 +36,8 @@ ActiveRecord::Schema.define(:version => 20130621000353) do
 
   create_table "calendars", :force => true do |t|
     t.string   "title"
-    t.string   "name"
     t.string   "description"
-    t.boolean  "private",     :default => false
+    t.boolean  "secret",      :default => false
     t.integer  "user_id"
     t.string   "image"
     t.datetime "created_at",                     :null => false
@@ -85,11 +84,12 @@ ActiveRecord::Schema.define(:version => 20130621000353) do
     t.datetime "last_modified"
     t.datetime "published"
     t.string   "url"
-    t.boolean  "all_day",       :default => false
+    t.boolean  "all_day",           :default => false
     t.float    "latitude"
     t.float    "longitude"
-    t.datetime "created_at",                       :null => false
-    t.datetime "updated_at",                       :null => false
+    t.boolean  "has_been_geocoded"
+    t.datetime "created_at",                           :null => false
+    t.datetime "updated_at",                           :null => false
   end
 
   add_index "events", ["calendar_id"], :name => "index_events_on_calendar_id"
