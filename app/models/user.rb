@@ -95,7 +95,7 @@ class User < ActiveRecord::Base
   end
 
   def follow_calendar!(calendar)
-    calendar_roles.find_or_create_by_calendar_id_and_role!(calendar.id, "follower")
+    calendar_roles.find_or_create_by_calendar_id_and_role!(calendar.id, :follower)
     followers.each do |follower|
       follower.user_notifications.create!(:kind => "friend_followed_calendar", :notificationable_id => calendar.id, :notificationable_type => "calendar")
     end

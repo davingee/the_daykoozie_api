@@ -7,6 +7,7 @@ class Calendar < ActiveRecord::Base
   has_many :events, :dependent => :destroy
   
   has_many :calendar_roles
+  has_many :calendar_followers
   
   mount_uploader :image, ImageUploader
 

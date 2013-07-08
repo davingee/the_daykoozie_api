@@ -22,7 +22,7 @@ class Ability
     can :read, :all
         
     cannot :read, Calendar do |calendar|
-      calendar.secret? and !calendar.calendar_role?(user,  [:owner, :admin, :manager])
+      calendar.secret? and !calendar.calendar_role?(user,  [:owner, :admin, :manager, :viewer])
     end
 
     if is_registered

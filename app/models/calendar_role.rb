@@ -2,7 +2,7 @@ class CalendarRole < ActiveRecord::Base
 
   attr_accessible :calendar_id, :role, :user_id
 
-  ROLES = [:owner, :admin, :manager, :follower]
+  ROLES = [:owner, :admin, :manager, :follower, :viewer]
   symbolize :role, :in => ROLES, :scopes => true
   validates :role, :inclusion=> { :in => ROLES }
 

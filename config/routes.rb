@@ -6,7 +6,8 @@ DaykoozieCom::Application.routes.draw do
 
 
       resources :calendars, except: [:new] do 
-        resources :calendar_roles, only: [:create, :destroy]
+                  
+        resources :calendar_roles, only: [:index, :create, :destroy]
         resources :calendar_followers, except: [:new, :edit]
 
         # delete '/calendar_follower_destroy' => 'calendar_followers#destroy'

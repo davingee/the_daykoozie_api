@@ -11,9 +11,16 @@ en:
     create: "Your calendar has been created."
     update: "Your calendar has been updated"
     destroy: "Your calendar has been removed"
+  calendar_role:
+    create: "Your calendar role has been created"
+    destroy: "Your calendar role has been destroyed"
+  calendar_follower:
+    create: "You are now following the calendar"
+    destroy: "You are now not following the calendar"
+
   rescue:
     RecordNotFound: "The page can not be found."
     NoMethodError: "The page can not be found."
   contact:
     create: "Your message has been sent."
-    
+      

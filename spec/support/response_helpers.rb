@@ -28,6 +28,9 @@ module ResponseHelpers
       elsif hash[:model_type] == :has_child
         body[hash[:root]]["id"].should == hash[:model].children.first.id
       end
+    elsif hash[:models]
+      body[hash[:root]].count.should == hash[:models].count
+      body[hash[:root]].count.should == hash[:models_count] if hash[:models_count]
     else
 
       if hash[:model_type] == :attributes
@@ -40,11 +43,13 @@ module ResponseHelpers
 
     if hash[:message].present?
       body["message"]["content"].should hash[:message]
+      body["message"]["content"].to_s.should_not match("translation missing")
     else
       body["message"]["content"].should be_nil
     end
 
     body["message"]["type"].should == hash[:type]
+
 
   end
 

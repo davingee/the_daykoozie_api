@@ -1,10 +1,10 @@
 require 'spec_helper'
-describe Api::V1::CalendarRolesController do
+describe Api::V1::CalendarFollowersController do
 
-  let :calendar_role_params do
+  let :calendar_follower_params do
     {
-      :user_id        => "Foo Bar",
-      :role  => "Foo Bar Description"
+      :calendar_id        => "Foo Bar",
+      :user_id  => "Foo Bar Description"
     }
   end
 
@@ -16,9 +16,10 @@ describe Api::V1::CalendarRolesController do
       
         it "should show all calendar roles from calendar" do
           user = set_token_auth_with_user
-          calendar = FactoryGirl.create(:calendar, :user_id => user.id)
-          FactoryGirl.create(:user)
-          FactoryGirl.create(:calendar, :user_id => user.id)
+          user_2 = FactoryGirl.create(:user)
+
+          calendar = FactoryGirl.create(:calendar, :user_id => user_2.id)
+          
           get :index, :calendar_id => calendar.id, :format => :json 
           calendar_roles = calendar.reload.calendar_roles
           hash = { :body => response.body, :status => 200, 
@@ -86,13 +87,14 @@ describe Api::V1::CalendarRolesController do
 
       it "should create a calendar" do
         user = set_token_auth_with_user
-        calendar = FactoryGirl.create(:calendar, :user_id => user.id)
-        user2 = FactoryGirl.create(:user)
-        post :create, :calendar_id => calendar.id, :calendar_role => { :user_id => user2.id, :role => :admin }, :format => :json 
-        calendar_role = user2.reload.calendar_roles.first
-        hash = { :body => response.body, :status => 200, :message => eql(m("calendar_role", "create")),
-          :type => "success", :root => "calendar_role", :model => calendar_role,
-          :model_type => :attributes, :attributes => {:user_id => user2.id, :role => "admin"} }
+        user_2 = FactoryGirl.create(:user)
+        calendar = FactoryGirl.create(:calendar, :user_id => user_2.id)
+        post :create, :calendar_id => calendar.id, :format => :json 
+        calendar_follower = calendar.reload.calendar_followers.first
+        puts calendar_follower.inspect
+        hash = { :body => response.body, :status => 200, :message => eql(m("calendar_follower", "create")),
+          :type => "success", :root => "calendar_follower", :model => calendar_follower,
+          :model_type => :attributes, :attributes => { :user_id => user.id, :calendar_id => calendar.id } }
         response_valid?(hash)
       end
 
